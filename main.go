@@ -17,7 +17,7 @@ func main() {
 
 	fmt.Println("🚀 Serving GTranslate API")
 
-	r.HandleFunc("/translate/{query}", Translate)
+	r.HandleFunc("/translate", Translate)
 
 	wrpR := middlewares.NewLogger(r)
 	port := "8730"
