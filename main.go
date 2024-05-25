@@ -17,7 +17,7 @@ func main() {
 
 	fmt.Println("🚀 Serving GTranslate API")
 
-	r.HandleFunc("/translate", Translate)
+	r.HandleFunc("/translate", Translate).Methods("POST", "OPTIONS")
 
 	wrpR := middlewares.NewLogger(r)
 	port := "8730"
@@ -42,7 +42,7 @@ func Translate(writer http.ResponseWriter, request *http.Request) {
 	value := gtranslate.Translate{
 		Text: query.Src,
 		From: "vi",
-		To:   "en",
+		To:   "zh-CN",
 	}
 	translated, err := gtranslate.Translator(value)
 	if err != nil {
@@ -55,6 +55,9 @@ func Translate(writer http.ResponseWriter, request *http.Request) {
 			panic(err)
 		}
 		writer.Header().Set("Content-Type", "application/json")
+		writer.Header().Set("Access-Control-Allow-Origin", "*")
+		writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
+		writer.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token")
 		writer.WriteHeader(http.StatusOK)
 
 		res := gtranslate.Translate{}
